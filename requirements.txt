@@ -1,0 +1,7 @@
+# ใช้รันใน  Terminal เพื่อสร้าง environment 
+# pip install -r requirements.txt 
+
+opencv-python
+numpy
+matplotlib
+
