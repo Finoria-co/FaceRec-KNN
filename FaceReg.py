@@ -33,22 +33,24 @@ y = np.array(y)
 # 3. เปิดกล้อง Real-time
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
+
+
 while True:
     ret, frame = cap.read()
     if not ret:
         break
 
     # วาดกรอบสี่เหลี่ยมสีแดง
-    cv2.rectangle(frame, (250, 120), (390, 300), (0, 0, 255), 2)
+    cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
 
     # ตัดภาพในกรอบแปลงเป็น Grayscale
-    face = cv2.cvtColor(frame[120:300, 250:390], cv2.COLOR_BGR2GRAY)
+    face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
     z = face.flatten()
 
     # ทำการทำนายผลถ้ามีรูปในระบบ
     if len(X) > 0:
         name = knn(X, y, z, k=1)
-        cv2.putText(frame, name, (250, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, name, (200, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):

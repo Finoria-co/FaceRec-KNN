@@ -22,8 +22,8 @@ while True:
         print("ไม่สามารถเปิดกล้องได้")
         break
 
-    cv2.rectangle(frame, (250,120), (390,300), (0,0,255), 2)
-    face = cv2.cvtColor(frame[120:300, 250:390, :], cv2.COLOR_BGR2GRAY)
+    cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
+    face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
 
     cv2.imshow('frame', frame)
     cv2.imshow('face', face)
