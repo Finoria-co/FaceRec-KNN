@@ -22,8 +22,11 @@ while True:
         print("ไม่สามารถเปิดกล้องได้")
         break
 
+    frame = cv2.flip(frame, 1) # พลิกภาพให้เหมือนกระจกเงา
+
     cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
     face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
+    face = cv2.resize(face, (350, 550)) # ปรับขนาดรูป
 
     cv2.imshow('frame', frame)
     cv2.imshow('face', face)

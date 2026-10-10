@@ -2,14 +2,20 @@ import cv2
 import numpy as np
 import os
 
-# 1. ฟังก์ชัน KNN เขียนเองสั้นๆ เทียบ Euclidean Distance ตรงๆ
-def knn(X, y, z, k=1):
+# 1. ฟังก์ชัน KNN
+def knn(X, y, z, k=1, threshold=3500):
     # Cast เป็น float32 เพื่อไม่ให้ค่าติดลบแล้วล้น (Underflow)
     diff = X.astype(np.float32) - z.astype(np.float32)
-    distances = np.sum(diff ** 2, axis=1) # Euclidean Distance
+    # ใช้ np.mean แทน np.sum เพื่อหาค่าเฉลี่ยความต่างต่อ 1 พิกเซล (ทำให้ไม่ขึ้นกับขนาดรูปภาพ)
+    distances = np.mean(diff ** 2, axis=1) 
     
     # ดึง index ของรูปที่ใกล้เคียงที่สุด K อันดับแรก
     idx = np.argsort(distances)[:k]
+    
+    # เช็คระยะห่าง ถ้าน้อยที่สุดยังมากกว่า threshold ให้ถือว่าไม่รู้จัก
+    if distances[idx[0]] > threshold:
+        return "Unknown"
+        
     cls, vote = np.unique(y[idx], return_counts=True)
     return cls[np.argmax(vote)]
 
@@ -24,6 +30,7 @@ for folder in os.listdir():
                 img_path = os.path.join(folder, file)
                 img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
                 if img is not None:
+                    img = cv2.resize(img, (350, 550)) #ปรับขนาดรูป
                     X.append(img.flatten())
                     y.append(folder)
 
@@ -40,11 +47,14 @@ while True:
     if not ret:
         break
 
+    frame = cv2.flip(frame, 1) # พลิกภาพให้เหมือนกระจกเงา
+
     # วาดกรอบสี่เหลี่ยมสีแดง
     cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
 
     # ตัดภาพในกรอบแปลงเป็น Grayscale
     face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
+    face = cv2.resize(face, (350, 550)) # ปรับขนาดรูป
     z = face.flatten()
 
     # ทำการทำนายผลถ้ามีรูปในระบบ
@@ -53,7 +63,8 @@ while True:
         cv2.putText(frame, name, (200, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
     cv2.imshow('frame', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == 27: # กดปุ่ม Esc เพื่อออก
         break
 
 cap.release()
