@@ -14,7 +14,7 @@ i = len(existing_files) + 1
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-print(f"กำลังเปิดกล้อง... กด 's' เพื่อเซฟรูปหน้า {name} (กด 'q' เพื่อออก)")
+print(f"กำลังเปิดกล้อง...กด 's' เพื่อเซฟรูปหน้า {name} (กด 'Esc' เพื่อออก)")
 
 while True:
     ret, frame = cap.read()
@@ -24,9 +24,9 @@ while True:
 
     frame = cv2.flip(frame, 1) # พลิกภาพให้เหมือนกระจกเงา
 
-    cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
-    face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
-    face = cv2.resize(face, (350, 550)) # ปรับขนาดรูป
+    cv2.rectangle(frame, (195, 125), (445, 375), (242, 143, 143), 2)
+    face = cv2.cvtColor(frame[125:375, 195:445], cv2.COLOR_BGR2GRAY)
+    face = cv2.resize(face, (250, 250)) # ปรับขนาดรูป
 
     cv2.imshow('frame', frame)
     cv2.imshow('face', face)
@@ -36,7 +36,7 @@ while True:
         cv2.imwrite(f'{name}/{i}.jpg', face)
         print(f"บันทึกรูปที่ {i} ของ {name} เรียบร้อย")
         i += 1
-    elif key == ord('q'):
+    elif key == 27: # กดปุ่ม Esc เพื่อออก
         break
 
 cap.release()

@@ -30,7 +30,7 @@ for folder in os.listdir():
                 img_path = os.path.join(folder, file)
                 img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
                 if img is not None:
-                    img = cv2.resize(img, (350, 550)) #ปรับขนาดรูป
+                    img = cv2.resize(img, (250, 250)) # ปรับขนาดรูป
                     X.append(img.flatten())
                     y.append(folder)
 
@@ -49,18 +49,18 @@ while True:
 
     frame = cv2.flip(frame, 1) # พลิกภาพให้เหมือนกระจกเงา
 
-    # วาดกรอบสี่เหลี่ยมสีแดง
-    cv2.rectangle(frame, (150, 50), (390, 450), (242, 143, 143), 2)
+    cv2.rectangle(frame, (195, 125), (445, 375), (242, 143, 143), 2)
 
     # ตัดภาพในกรอบแปลงเป็น Grayscale
-    face = cv2.cvtColor(frame[50:450, 150:390], cv2.COLOR_BGR2GRAY)
-    face = cv2.resize(face, (350, 550)) # ปรับขนาดรูป
+    face = cv2.cvtColor(frame[125:375, 195:445], cv2.COLOR_BGR2GRAY)
+    face = cv2.resize(face, (250, 250)) # ปรับขนาดรูป
     z = face.flatten()
 
     # ทำการทำนายผลถ้ามีรูปในระบบ
     if len(X) > 0:
         name = knn(X, y, z, k=1)
-        cv2.putText(frame, name, (200, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        # แสดงชื่ออยู่เหนือกรอบ (x=195 ตรงขอบซ้าย, y=110 เหนือขอบบน 125)
+        cv2.putText(frame, name, (195, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
     cv2.imshow('frame', frame)
     key = cv2.waitKey(1) & 0xFF
